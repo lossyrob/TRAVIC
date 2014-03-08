@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>TRAVIC - Transit Visualization Client</title>
+      <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+      <link type="text/css" href="lib/jquery/jquery.jscrollpane.css" rel="stylesheet" media="all" />
+      <link rel="stylesheet" href="style.css" />
+       <!--[if lte IE 8]>
+           <link rel="stylesheet" href="leaflet.ie.css" />
+       <![endif]-->
+      <script type="text/javascript" src="lib/leaflet/leaflet.js"></script>
+      <script type="text/javascript" src="lib/leaflet/google.js"></script>
+      <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+      <script type="text/javascript" src="lib/jquery/jquery.mousewheel.js"></script>
+      <script type="text/javascript" src="lib/jquery/jquery.jscrollpane.min.js"></script>
+      <script type="text/javascript" src="lib/raphael/raphael-min.js"></script>
+
+      <script type="text/javascript" src="js/trajclient.js"></script>
+      <script type="text/javascript" src="js/transitlayer.js"></script>
+
+      <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+    </head>
+    <body>
+        <div id="mapwrap">
+          <div id="map"></div>
+        </div>
+        <div id="header">
+          <div id="logo">
+            <span id="title">TRAVIC</span><span id="subtitle">Transit Visualization Client</span>
+          </div>
+           <span id="imp">Beta &mdash; Master Thesis &mdash; <a target="_blank" href='http://ad.informatik.uni-freiburg.de/'>Albert-Ludwigs-Universität Freiburg</a> &mdash; 2014 <a href='mailto:brosip@informatik.uni-freiburg.de'>Patrick Brosi</a></span>
+
+        </div>
+        <div id="bar" style="height:0px">
+          <div id="barclosebut"></div>
+          <div id="lineNumber"></div>
+          <div id="lineTo"></div>
+          <div id="lineDesc"></div>
+          <div id="lineTravelTimes"></div>
+          <div id="lineVerlauf">
+            <div id="lineVerlaufScroll">
+            <ul>
+
+            </ul>
+            </div>
+          </div>
+          <div id="barLoading"></div>
+        </div>
+
+        <div id="footer">
+                    <div id="localtime">
+            <span id="localtimealabel">Local time:</span>
+            <span id="localclock">
+              -
+            </span>
+          </div>
+          <div id="clock">
+            -
+          </div>
+          <div id="speedometer">
+            <div id="speedoview">1x</div>
+            <button id="fasterbut" type="button">&#10097;&#10097;</button>
+            <button id="normalbut" type="button">&#9658;</button>
+            <button id="slowerbut" type="button">&#10096;&#10096;</button>
+            <button id="currenttime" type="button">&bull;</button>
+          </div>
+          <div id="footLoading"></div>
+        </div>
+
+      <script type="text/javascript" src="js/client.js"></script>
+    </body>
+</html>

@@ -1,0 +1,365 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('data/lato-bold-webfont.eot');
+    src: url('data/lato-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('data/lato-bold-webfont.woff') format('woff'),
+         url('data/lato-bold-webfont.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('data/lato-regular-webfont.eot');
+    src: url('data/lato-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('data/lato-regular-webfont.woff') format('woff'),
+         url('data/lato-regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, html {
+  height:100%;
+  margin:0px;
+  font-family:Lato, Verdana, Helvetica, arial, sans-serif;
+  position:relative;
+}
+
+a {
+  color:white;
+  text-decoration:none;
+}
+
+a:hover {
+  color:white;
+  text-decoration:underline;
+}
+
+#bar {
+  position:absolute;
+  bottom:40px;
+  left:0px;
+  right:0px;
+  font-size:11px;
+  height:240px;
+  opacity:0.9;
+  background-color:#494a49;
+  color:white;
+  overflow:hidden;
+}
+
+#header, #footer {
+  height:40px;
+  position:absolute;
+  width:100%;
+  background-color:#494a49;
+  color:white;
+  opacity:0.9;
+}
+
+#header {
+  top:0px;
+}
+
+#barclosebut {
+  width:10px;
+  height:10px;
+  background-color:#666;
+  position:absolute;
+  right:10px;
+  top:10px;
+  cursor:pointer;
+}
+
+#barclosebut:hover {
+  background-color:#AAA;
+}
+
+#logo {
+  line-height:40px;
+}
+
+#barLoading {
+  position:absolute;
+  left:50%;
+  top:50%;
+  background-image:url(data/loading.gif);
+  background-repeat:no-repeat;
+  width:32px;
+  height:32px;
+}
+
+#footLoading {
+  position:absolute;
+  right:10px;
+  top:4px;
+  background-image:url(data/loading_dark.gif);
+  background-repeat:no-repeat;
+  width:32px;
+  height:32px;
+}
+
+.leaflet-left .leaflet-control, .leaflet-right .leaflet-control {
+  margin-top:60px;
+}
+
+#title {
+  font-size:20px;
+  letter-spacing: 2.5px;
+  display:block;
+  float:left;
+  line-height:40px;
+  font-weight:bold;
+  height:40px;
+  margin-left:20px;
+
+}
+
+#subtitle {
+font-weight:normal;
+  display:block;
+  float:left;
+  font-size:15px;
+  margin-left:20px;
+  letter-spacing: .5px;
+  height:40px;
+  line-height:40px;
+}
+
+#imp {
+  font-weight:normal;
+  display:block;
+  float:right;
+  font-size:14px;
+  margin-right:10px;
+  font-size:12px;
+  letter-spacing: .5px;
+  line-height:40px;
+  height:40px;
+}
+
+#footer {
+  bottom:0px;
+  height:39px;
+  opacity:0.9;
+  border-top:solid 1px #111;
+  background:#222;
+}
+
+#localtime {
+  position:absolute;
+  top:0px;
+  height:39px;
+  line-height:39px;
+  font-size:13px;
+  left:120px;
+}
+
+#clock {
+  position:absolute;
+  left:20px;
+  top:0px;
+  height:39px;
+  line-height:39px;
+  font-size:20px;
+}
+
+#speedometer {
+  position:absolute;
+  left:300px;
+  top:0px;
+  height:39px;
+  padding:0px;
+  margin:0px;
+  line-height:39px;
+}
+
+#speedometer button {
+  display:block;
+  float:right;
+  background:transparent;
+  border:0px;
+  border-left:solid black 2px;
+  height:39px;
+  width:39px;
+  margin:0px;
+  outline-width:0px;
+  padding:0px;
+  color:white;
+  font-size:26px;
+  cursor:pointer;
+}
+
+#speedoview {
+  display:block;
+  float:right;
+  margin-left:10px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+#speedometer #slowerbut, #speedometer #fasterbut {
+  font-size:10px;
+}
+
+#speedometer #fasterbut {
+  border-right:solid black 2px;
+}
+
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0
+}
+
+#speedometer button:hover {
+  background:#EEE;
+}
+
+#mapwrap {
+  position:absolute;
+  top:0px;
+  bottom:40px;
+  left:0px;
+  right:0px;
+}
+
+#map {
+  width:100%;
+  height:100%;
+}
+
+#lineNumber {
+
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  min-width:20px;
+  height:20px;
+  line-height:20px;
+  border: solid black 2px;
+  padding:5px;
+  display:block;
+  float:left;
+  margin:15px;
+  margin-top:10px;
+  text-align:center;
+  font-size:14px;
+  font-weight:bold;
+
+}
+
+#lineTo {
+  font-weight:bold;
+  font-size:18px;
+  margin-top:10px;
+  letter-spacing:.5px;
+}
+
+#lineVerlauf {
+  position:absolute;
+  top:60px;
+  width:100%;
+  height:180px;
+  bottom:0px;
+}
+
+#lineDesc {
+  font-size:13px;
+  font-weight:normal;
+}
+
+#lineVerlaufScroll {
+  height:100%;
+  width:100%;
+}
+
+#lineVerlauf ul {
+  height:100px;
+  padding:0px;
+  margin:0px;
+  padding-left:20px;
+  padding-right:20px;
+  clear:both;
+}
+
+#lineVerlauf li {
+  list-style-type:none;
+  margin-left:0px;
+  padding-left:0px;
+  margin:0px;
+  overflow:hidden;
+  padding-top:60px;
+  padding-bottom:60px;
+  padding-left:35px;
+  padding-right:35px;
+  position:relative;
+  float:left;
+  overflow:visible;
+  background-image:url(data/station.png);
+  background-repeat:no-repeat;
+  background-position:0% 100%;
+}
+
+#lineVerlauf li.last {
+  background-image:url(data/station_last.png);
+}
+
+.leaflet-bottom {
+  display:none;
+}
+
+.time {
+  display:block;
+  position:absolute;
+  top:120px;
+  width:60px;
+  left:-23px;
+  text-align:center;
+  height:20px;
+}
+
+.stationname {
+  position:absolute;
+  bottom:20px;
+  left:0px;
+  white-space:normal;
+  margin-left:1em;
+  font-size:13px;
+  width:110px;
+  font-weight:bold;
+  letter-spacing:.3px;
+  padding:5px;
+  padding-left:2px;
+  transform: rotate(-40deg);
+  transform-origin: 20px 50%;
+  -webkit-transform: rotate(-40deg);
+  -webkit-transform-origin:20px 50%;
+  -moz-transform: rotate(-40deg);
+  -moz-transform-origin: 20px 50%;
+  -ms-transform: rotate(-40deg);
+  -ms-transform-origin: 20px 50%;
+  -o-transform: rotate(-40deg);
+  -o-transform-origin: 20px 50%;
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  cursor:pointer;
+}
+
+.stationname:hover {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  padding:0px;
+  border:solid 5px #777;
+  border-left:solid 2px #777;
+  background-color:#777;
+}
+
+.vehType {
+  margin-right:10px;
+  font-weight:bold;
+}
+
+.depDelay, .arrDelay {
+  color:#ff9595;
+  font-size:10px;
+}

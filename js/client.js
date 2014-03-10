@@ -2,6 +2,27 @@
 // Chair of Algorithms and Data Structures.
 // Author: Patrick Brosi <brosip@informatik.uni-freiburg.de>
 
+// translation
+var DAY_MAP = new Array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
+var DAY_SPANS = {"mtillfr" : "monday till friday",
+                 "sundays" : "sundays",
+                 "saturdays" : "saturdays",
+                 "weekends" : "weekends",
+                 "daily" : "daily"
+                };
+var MISC = {"irrservice" : "irregular additional services",
+            "addserviceon" : "Additional service on",
+           }
+
+function getParamByName(name) {
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp(regexS);
+  var results = regex.exec(window.location);
+  if (results == null) return "";
+  else return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 function showVehicleStations(w) {
   for (var i = 0; i < w.sts.length; i++) {
     (function() {
@@ -27,7 +48,7 @@ function showVehicleStations(w) {
       window.setTimeout(function() {s.fadeTo(500, 1)}, i*15)
     })();
   }
-  $("#bar #lineVerlauf #lineVerlaufScroll").jScrollPane({"animateScroll":true});
+  $("#bar #lineVerlauf #lineVerlaufScroll").jScrollPane({"animateScroll":true}).data('jsp').scrollToPercentX(0);
   $(window).resize(function() {
     $("#bar #lineVerlauf #lineVerlaufScroll").data('jsp').reinitialise();
   })
@@ -42,7 +63,69 @@ function clearVehicleWay() {
   $("#bar #barLoading").show();
 }
 
+function getOpDate(day) {
+  return day.y + 1900 + "/" + day.m + "/" + day.d;
+}
+
+function getOpString(pos, neg, operating) {
+  var ret = "";
+  switch(operating) {
+    case 31:
+      ret = DAY_SPANS["mtillfr"];
+      break;
+    case 64:
+      ret = DAY_SPANS["sundays"];
+      break;
+    case 32:
+      ret = DAY_SPANS["saturdays"];
+      break;
+    case 96:
+      ret = DAY_SPANS["weekends"];
+      break;
+    case 127:
+      ret = DAY_SPANS["daily"];
+      break;
+    default:
+      var map = Number(operating).toString(2);
+      var first = false;
+      for (var i=0; i < 7; i++) {
+        if (map.charAt(i) == "1") {
+          if (first) ret += ", ";
+          first = true;
+          ret += DAY_MAP[i];
+        }
+      }
+  }
+
+  if (pos.length > 0) {
+    var posDays = "";
+    for (var i=0; i < pos.length; i++) {
+      posDays += getOpDate(pos[i]);
+      if (i < pos.length-1) posDays += ", ";
+    }
+    if (pos.length > 10) {
+      if (operating == 0) ret += "irregularly";
+      else ret += " (" + MISC["irrservice"] + ")";
+    }else{
+      if (operating == 0) ret += posDays;
+      else ret += ". " + MISC["addserviceon"] + " " + posDays + ".";
+    }
+  }
+
+  if (neg.length > 0) {
+    var negDays = "";
+    for (var i=0; i < neg.length; i++) {
+      negDays += getOpDate(neg[i]);
+      if (i < neg.length-1) negDays += ", ";
+    }
+    ret += " (no service on " + negDays + ")";
+  }
+
+  return ret;
+}
+
 window.showVehicleWay = function(w) {
+  $("#bar #lineVerlauf ul").html("");
   $("#bar #barLoading").hide();
   $("#bar #lineNumber").show();
   $("#bar #lineNumber").html(w.sn);
@@ -53,48 +136,9 @@ window.showVehicleWay = function(w) {
   $("#bar #lineTo").html(w.hs);
   $("#bar #lineDesc").html(w.ln);
   var opStr = "<span class='vehType'>" + transitLayer.getVehicleTypeName(w.t) + "</span>";
+
   opStr += "Operating: ";
-  if (w.tt.t == 31) opStr += "monday till friday";
-  else if (w.tt.t == 64) opStr += "sundays";
-  else if (w.tt.t == 32) opStr += "saturdays";
-  else if (w.tt.t == 96) opStr += "weekends";
-  else if (w.tt.t == 127) opStr += "daily";
-  else {
-    var dayMap = new Array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
-    var map = Number(w.tt.t).toString(2);
-    var first = false;
-    for (var i=0; i < 7; i++) {
-      if (map.charAt(i) == "1") {
-        if (first) opStr += ", ";
-        first = true;
-        opStr += dayMap[i];
-      }
-    }
-  }
-
-  if (w.tt.p.length > 0) {
-    var posDays = "";
-    for (var i=0; i < w.tt.p.length; i++) {
-      posDays += w.tt.p[i].y + 1900 + "/" + w.tt.p[i].m + "/" + w.tt.p[i].d;
-      if (i < w.tt.p.length-1) posDays += ", ";
-    }
-    if (w.tt.p.length > 10) {
-      if (w.tt.t == 0) opStr += "irregularly";
-      else opStr += " (irregular additional services)";
-    }else{
-      if (w.tt.t == 0) opStr += posDays;
-      else opStr += ". Additional service on " + posDays + ".";
-    }
-  }
-
-  if (w.tt.n.length > 0) {
-    var negDays = "";
-    for (var i=0; i < w.tt.n.length; i++) {
-      negDays += w.tt.n[i].y + 1900 + "/" + w.tt.n[i].m + "/" + w.tt.n[i].d;
-      if (i < w.tt.n.length-1) negDays += ", ";
-    }
-    opStr += " (no service on " + negDays + ")";
-  }
+  opStr += getOpString(w.tt.p, w.tt.n, w.tt.t);
 
   $("#bar #lineTravelTimes").html(opStr);
   $("#bar #lineVerlauf ul").html("");
@@ -124,19 +168,10 @@ $("#currenttime").click(function() {
 });
 
 $("#barclosebut").click(function() {
-  $("#bar").animate({"height":0}, 200, "swing");
+  $("#bar").animate({"height":0}, 200, "swing", function() {clearVehicleWay();});
   transitLayer.clearVehicleTraj();
   transitLayer.unselectVehicle();
 });
-
-function getParamByName(name) {
-  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-  var regexS = "[\\?&]"+name+"=([^&#]*)";
-  var regex = new RegExp(regexS);
-  var results = regex.exec(window.location);
-  if (results == null) return "";
-  else return decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 
 var gmapLayer = new L.Google('HYBRID');
 var osmLayer = new L.TileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -165,14 +200,15 @@ if (getParamByName("z")) {
 if (getParamByName("t")) {
   var starttime = parseInt(getParamByName("t"));
 }
-var transitLayer = new T.Layer({"time" : starttime, "statMode":statMode});
+var transitLayer = new TransitLayer({"time" : starttime, "statMode" : statMode});
+var leafletTransitPlug = new T.Layer(transitLayer);
 
 var trajClient = new TrajectoryClient("http://localhost:8989");
 // var trajClient = new TrajectoryClient("http://panarea.informatik.uni-freiburg.de/routeplanner/ts_requestforwarder.php");
 transitLayer.setTrajectoryClient(trajClient);
 
 var map = L.map('map').setView(pos, zoom);
-map.addLayer(osmLayer).addLayer(transitLayer);
+map.addLayer(osmLayer).addLayer(leafletTransitPlug);
 
 var baseMaps = {
     "OpenStreetMap": osmLayer,
@@ -183,25 +219,24 @@ var baseMaps = {
 L.control.layers(baseMaps).addTo(map);
 
 transitLayer.addVehicleSelectListener(function(id) {
-                                                      transitLayer.clearVehicleTraj();
-                                                      clearVehicleWay();
-                                                      $("#bar").animate({"height":240}, 200, "swing", function() {
-                                                        trajClient.getTrajectoryStations(id, "window.showVehicleWay");
-                                                      });
-                                                      transitLayer.showVehicleTraj(id);
-                                                   });
+  transitLayer.clearVehicleTraj();
+  clearVehicleWay();
+  $("#bar").animate({"height":240}, 200, "swing", function() {
+    trajClient.getTrajectoryStations(id, "window.showVehicleWay");
+  });
+  transitLayer.showVehicleTraj(id);
+});
 
 transitLayer.addTimeChangeListener(function() {
-                                                var t = transitLayer.getCurTime();
-                                                $("#clock").html(pad(t.getHours(),2) + ":" + pad(t.getMinutes(),2) + ":" + pad(t.getSeconds(),2));
+  var t = transitLayer.getCurTime();
+  $("#clock").html(pad(t.getHours(),2) + ":" + pad(t.getMinutes(),2) + ":" + pad(t.getSeconds(),2));
 
-                                                if (transitLayer.getTimeZone() !== undefined) {
-                                                  var lt = new Date(t.getTime() + transitLayer.getTimeZone().os * 1000);
-                                                  $("#localclock").html(pad(lt.getUTCHours(),2) + ":" + pad(lt.getUTCMinutes(),2) + ":" + pad(lt.getUTCSeconds(),2) + " (" + transitLayer.getTimeZone().c + ")");
-                                                }else{
-                                                  $("#localclock").html("-");
-                                                }
-
-                                              });
+  if (transitLayer.getTimeZone() !== undefined) {
+    var lt = new Date(t.getTime() + transitLayer.getTimeZone().os * 1000);
+    $("#localclock").html(pad(lt.getUTCHours(),2) + ":" + pad(lt.getUTCMinutes(),2) + ":" + pad(lt.getUTCSeconds(),2) + " (" + transitLayer.getTimeZone().c + ")");
+  }else{
+    $("#localclock").html("-");
+  }
+});
 
 $("#bar #lineNumber").hide();

@@ -515,7 +515,7 @@ TransitLayer.prototype._getVehicleText = function(lbl, r, color, p, circ) {
   var l = this;
   var t = this._paper.text(p[0], p[1], lbl).attr({"fill": color,
                                                 "stroke": color,
-                                                "stroke-width": (lbl.length == 3) ? 0.3: 0.5
+                                                "stroke-width": (lbl.length == 3) ? 0.3: 0.5,
                                                 "font-size": (lbl.length == 3) ? r - 5: r+2,
                                                 "font-family": "Verdana,Trebuchet MS, Helvetica, sans-serif",
                                                 'cursor': 'pointer',
@@ -580,7 +580,6 @@ TransitLayer.prototype._highlightVehicle = function(veh, r) {
   if (veh.data("textOb") === undefined) {
     var textC = this._standardTextColor[veh.data("veh").t];
     if (veh.data("veh").tc) textC = "#" + veh.data("veh").tc;
-    console.log(textC);
     var textOb = this._getVehicleText(veh.data("lbl"), veh.attr('r'), textC, new Array(veh.attr('cx'), veh.attr('cy')), veh);
     veh.data("textOb", textOb);
     veh.data("textOb").toFront();

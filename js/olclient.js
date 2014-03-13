@@ -274,7 +274,7 @@ map.addLayer(sbb_relief);
 map.setCenter(zurich, 3);
 
 var transitLayer = new TransitLayer({"time" : starttime, "statMode" : false});
-transitLayer._timeStepArray = new Array(3000, 2000, 500, 300, 200, 150);
+transitLayer._timeStepArray = new Array(3000, 2000, 500, 300, 200, 200);
 transitLayer._standardTextColor =  new Array("#000000", "#000000", "#000000", "#000000", "#f4f4f4", "#000000", "#000000", "#000000")
 
 var trajClient = new TrajectoryClient("http://localhost:8989");

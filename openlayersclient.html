@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <title>OpenTRAVIC - Transit Visualization Client</title>
+      <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+      <link type="text/css" href="lib/jquery/jquery.jscrollpane.css" rel="stylesheet" media="all" />
+      <link rel="stylesheet" href="style.css" />
+       <!--[if lte IE 8]>
+           <link rel="stylesheet" href="leaflet.ie.css" />
+       <![endif]-->
+      <script type="text/javascript" src="lib/jquery/jquery.js"></script>
+      <script type="text/javascript" src="lib/jquery/jquery.mousewheel.js"></script>
+      <script type="text/javascript" src="lib/jquery/jquery.jscrollpane.min.js"></script>
+      <script src="ol/OpenLayers.js"></script>
+      <script src="js/openlayersplug.min.js"></script>
+      <script type="text/javascript" src="lib/raphael/raphael-min.js"></script>
+      <script type="text/javascript" src="js/trajclient.min.js"></script>
+      <script type="text/javascript" src="js/transitlayer.min.js"></script>
+    </head>
+    <body>
+        <div id="mapwrap">
+          <div id="map"></div>
+        </div>
+        <div id="header">
+          <div id="logo">
+            <span id="title">OpenTRAVIC</span><span id="subtitle">Transit Visualization Client for OpenLayers</span>
+          </div>
+
+
+        </div>
+        <div id="bar" style="height:0px">
+          <div id="barclosebut"></div>
+          <div id="lineNumber"></div>
+          <div id="lineTo"></div>
+          <div id="lineDesc"></div>
+          <div id="lineTravelTimes"></div>
+          <div id="lineVerlauf">
+            <div id="lineVerlaufScroll">
+            <ul>
+
+            </ul>
+            </div>
+          </div>
+          <div id="barLoading"></div>
+        </div>
+
+        <div id="footer">
+                    <div id="localtime">
+            <span id="localtimealabel">Local time:</span>
+            <span id="localclock">
+              -
+            </span>
+          </div>
+          <div id="clock">
+            -
+          </div>
+          <div id="speedometer">
+            <div id="speedoview">1x</div>
+            <button id="fasterbut" type="button">&#10097;&#10097;</button>
+            <button id="normalbut" type="button">&#9658;</button>
+            <button id="slowerbut" type="button">&#10096;&#10096;</button>
+            <button id="currenttime" type="button">&bull;</button>
+          </div>
+          <div id="footLoading"></div>
+        </div>
+
+      <script type="text/javascript" src="js/olclient.min.js"></script>
+    </body>
+</html>

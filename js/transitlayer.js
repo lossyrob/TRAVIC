@@ -514,8 +514,10 @@ TransitLayer.prototype._getVehicleText = function(lbl, r, color, p, circ) {
   if (lbl.length > 3) lbl=lbl.substring(0,1);
   var l = this;
   var t = this._paper.text(p[0], p[1], lbl).attr({"fill": color,
-                                                "font-size": (lbl.length == 3) ? r - 2: r+2,
-                                                "font-family": "Trebuchet MS, Helvetica, sans-serif",
+                                                "stroke": color,
+                                                "stroke-width": (lbl.length == 3) ? 0.3: 0.5
+                                                "font-size": (lbl.length == 3) ? r - 5: r+2,
+                                                "font-family": "Verdana,Trebuchet MS, Helvetica, sans-serif",
                                                 'cursor': 'pointer',
                                           })
                                           .mouseover(function() {
@@ -577,7 +579,8 @@ TransitLayer.prototype._highlightVehicle = function(veh, r) {
 
   if (veh.data("textOb") === undefined) {
     var textC = this._standardTextColor[veh.data("veh").t];
-    if (veh.data("veh").tc) textC = veh.data("veh").tc;
+    if (veh.data("veh").tc) textC = "#" + veh.data("veh").tc;
+    console.log(textC);
     var textOb = this._getVehicleText(veh.data("lbl"), veh.attr('r'), textC, new Array(veh.attr('cx'), veh.attr('cy')), veh);
     veh.data("textOb", textOb);
     veh.data("textOb").toFront();
@@ -590,9 +593,6 @@ TransitLayer.prototype._highlightVehicle = function(veh, r) {
     veh.data("textOb").toFront();
   }
 
-  if (veh.data("textOb").attr("text").length == 3) veh.data("textOb").animate({'font-size' : r}, 150);
-  else veh.data("textOb").animate({'font-size' : r + 2}, 150);
-
   if (this._pulseEnabled && veh.data("pulse") === undefined && !veh.data("pulsed")) {
     veh.data("pulse", this._paper.circle(veh.attrs.cx, veh.attrs.cy, veh.attrs.r));
     veh.data("pulse").attr({'opacity' : 0.7});
@@ -601,6 +601,8 @@ TransitLayer.prototype._highlightVehicle = function(veh, r) {
   }
 
   veh.animate({'r' : r}, 150);
+  if (veh.data("textOb").attr("text").length == 3) veh.data("textOb").animate({'font-size' : r-2}, 150);
+  else veh.data("textOb").animate({'font-size' : r + 2}, 150);
 }
 
 TransitLayer.prototype._unhighlightVehicle = function(veh) {
@@ -612,10 +614,10 @@ TransitLayer.prototype._unhighlightVehicle = function(veh) {
   if (veh.data("textOb") !== undefined) {
     veh.data("textOb").stop();
     var rad;
-    if (veh.data("textOb").attr("text").length == 3) rad = r - 2;
+    if (veh.data("textOb").attr("text").length == 3) rad = r - 5;
     else rad = r + 2;
 
-    veh.data("textOb").animate({'font-size' : (rad < 8 ? 8 : rad)}, 150, "linear", function() {
+    veh.data("textOb").animate({'font-size' : (rad < 8 ? 8 : rad)}, 100, "linear", function() {
       if (r < 9) {
         this.remove();
         veh.data("textOb", undefined);

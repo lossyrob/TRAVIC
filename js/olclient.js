@@ -1,6 +1,45 @@
-// Copyright 2014, University of Freiburg,
-// Chair of Algorithms and Data Structures.
-// Author: Patrick Brosi <brosip@informatik.uni-freiburg.de>
+TransitLayer.prototype._getPWidth = function(type) {
+  z = this._curZoom;
+  switch(type) {
+    case 0:
+      // tram
+      return 5;
+    case 1:
+      // metro
+      switch(z) {
+        case 5: return 9;
+        case 4: return 7;
+        case 3: return 5;
+        case 2: return 4;
+        case 1: return 3;
+        case 0: return 3;
+      }
+    case 2:
+      // train
+      switch(z) {
+        case 5: return 11;
+        case 4: return 11;
+        case 3: return 8;
+        case 2: return 6;
+        case 1: return 3.5;
+        case 0: return 3;
+      }
+    case 3:
+      // bus
+      return 4;
+    default:
+      // rest
+      switch(z) {
+        case 5: return 7;
+        case 4: return 5.5;
+        case 3: return 4;
+        case 2: return 3;
+        case 1: return 3;
+        case 0: return 2.5;
+      }
+  }
+  return 1;
+}
 
 // translation
 var DAY_MAP = new Array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
@@ -40,7 +79,8 @@ function showVehicleStations(w) {
       s.append(ss);
       ss.click(function() {
         (function() {
-          map.panTo(new L.latLng(curStation.p[0], curStation.p[1]));
+          var point = new OpenLayers.LonLat(curStation.p[0], curStation.p[1]);
+          map.panTo(point);
         })();
       });
       $("#bar #lineVerlauf ul").append(s);
@@ -173,19 +213,44 @@ $("#barclosebut").click(function() {
   transitLayer.unselectVehicle();
 });
 
-var gmapLayer = new L.Google('HYBRID');
-var osmLayer = new L.TileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '',
-          maxZoom: 20
-      });
-var oenvKarteLayer = new L.TileLayer('http://tile.memomaps.de/tilegen/{z}/{x}/{y}.png', {
-    attribution: '',
-    maxZoom: 20
+var map = new OpenLayers.Map('map', {
+  extent : [420000, 30000, 900000, 350000],
+  maxExtent : [420000, 30000, 900000, 350000],
+  resolutions : [750,500,250,100,50,20]
+});
+
+var attribution = "&copy; SBB/CFF/FFS";
+
+var sbb_relief =  new OpenLayers.Layer.WMTS ({
+  url: ['http://map1.trafimage.ch/main/tilecache', 'http://map2.trafimage.ch/main/tilecache', 'http://map3.trafimage.ch/main/tilecache'],
+  displayInLayerSwitcher: false,
+  requestEncoding: 'REST',
+  buffer: 0,
+  style: 'default',
+  dimensions: ['TIME'],
+  params: {
+      'time': '2012'
+  },
+  maxExtent: new OpenLayers.Bounds(420000, 30000, 900000, 350000),
+  resolutions: [750, 500, 250, 100, 50,20],
+  matrixSet: 'swissgrid_50',
+  projection: new OpenLayers.Projection("EPSG:21781"),
+  units: "m",
+  formatSuffix: 'png',
+  ref: "netzkarte_relief",
+  name: OpenLayers.i18n('netzkarte_relief'),
+  attribution: attribution,
+  mapserverLayers: 'netzkarte_raster_relief',
+  resolutions: [750, 500, 250, 100, 50, 20],
+  matrixSet: 'swissgrid_20',
+  layer: 'netzkarte_raster_relief',
+  formatSuffix: 'jpeg',
+  group: 'background',
+  visibility: true,
+  isBaseLayer: true
 });
 
 var starttime = (new Date()).getTime();
-var pos = new L.LatLng(46.980252,8.26129);
-var zoom = 9;
 var statMode = false;
 
 if (getParamByName("statmode")) {
@@ -200,23 +265,24 @@ if (getParamByName("z")) {
 if (getParamByName("t")) {
   var starttime = parseInt(getParamByName("t"));
 }
-var transitLayer = new TransitLayer({"time" : starttime, "statMode" : statMode});
-var leafletTransitPlug = new T.Layer(transitLayer);
 
-// var trajClient = new TrajectoryClient("http://localhost:8989");
-var trajClient = new TrajectoryClient("http://panarea.informatik.uni-freiburg.de/routeplanner/ts_requestforwarder.php");
+
+var epsg4326 = new OpenLayers.Projection("EPSG:4326");
+var zurich = new OpenLayers.LonLat(653176.34, 227279.43);
+
+map.addLayer(sbb_relief);
+map.setCenter(zurich, 3);
+
+var transitLayer = new TransitLayer({"time" : starttime, "statMode" : false});
+transitLayer._timeStepArray = new Array(3000, 2000, 500, 300, 200, 150);
+transitLayer._standardTextColor =  new Array("#000000", "#000000", "#000000", "#000000", "#f4f4f4", "#000000", "#000000", "#000000")
+
+var trajClient = new TrajectoryClient("http://localhost:8989");
+//var trajClient = new TrajectoryClient("http://panarea.informatik.uni-freiburg.de/routeplanner/ts_requestforwarder.php");
 transitLayer.setTrajectoryClient(trajClient);
 
-var map = L.map('map').setView(pos, zoom);
-map.addLayer(osmLayer).addLayer(leafletTransitPlug);
-
-var baseMaps = {
-    "OpenStreetMap": osmLayer,
-    "Public Transit Map" : oenvKarteLayer,
-    "Google Maps": gmapLayer
-};
-
-L.control.layers(baseMaps).addTo(map);
+transitlayer = new OpenLayers.Layer.TransitLayer("transit", {"transitLayer" : transitLayer});
+map.addLayer(transitlayer);
 
 transitLayer.addVehicleSelectListener(function(id) {
   transitLayer.clearVehicleTraj();

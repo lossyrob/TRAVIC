@@ -46,6 +46,7 @@ a:hover {
   background-color:#494a49;
   color:white;
   overflow:hidden;
+  z-index:9999;
 }
 
 #header, #footer {
@@ -55,6 +56,7 @@ a:hover {
   background-color:#494a49;
   color:white;
   opacity:0.9;
+  z-index:9999;
 }
 
 #header {
@@ -101,6 +103,10 @@ a:hover {
 
 .leaflet-left .leaflet-control, .leaflet-right .leaflet-control {
   margin-top:60px;
+}
+
+.olControlZoom {
+  margin-top:40px;
 }
 
 #title {
@@ -362,4 +368,8 @@ button::-moz-focus-inner {
 .depDelay, .arrDelay {
   color:#ff9595;
   font-size:10px;
+}
+
+.olControlAttribution {
+  bottom:5px !important;
 }

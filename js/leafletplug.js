@@ -35,6 +35,12 @@ T.Layer = L.Class.extend({
 
     var bounds = map.getBounds();
 
+    console.log("SW");
+    console.log(map.project(bounds.getSouthWest()));
+
+    console.log("NE");
+    console.log(map.project(bounds.getNorthEast()));
+
     map._transitLayerwrap._transitLayer._updateRaphaelViewport(minPos.x, minPos.y, newWidth, newHeight,map.getZoom(), map.getPixelOrigin(), map.project(bounds.getSouthWest()), map.project(bounds.getNorthEast()));
   },
 

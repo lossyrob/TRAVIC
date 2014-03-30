@@ -3,7 +3,7 @@
 // Author: Patrick Brosi <brosip@informatik.uni-freiburg.de>
 
 window.TransitLayer = function(options) {
-  this._MIN_MULTIPLICATOR = 0.5;
+  this._MIN_MULTIPLICATOR = 0.1;
   this._MAX_MULTIPLICATOR = 120;
   this._LOOKAHEADSECONDS = 20;
 
@@ -271,8 +271,8 @@ TransitLayer.prototype._updtVehTrajsPartial = function(pos, load, timestep) {
   for(var j=0, i = pos, len = this._trajectories.length; i<len && j<load;++i,++j) {
     var curT = this._trajectories[i];
     var curPts = curT.pts;
-
     if (curPts[0][0].at > time) continue;
+
     if (curT.marker !== undefined) {
       var lastPrtTr = curPts[curPts.length-1];
       var lastPt = lastPrtTr[lastPrtTr.length-1];

@@ -125,6 +125,7 @@ function getOpString(pos, neg, operating) {
 }
 
 window.showVehicleWay = function(w) {
+  clearVehicleWay();
   $("#bar #lineVerlauf ul").html("");
   $("#bar #barLoading").hide();
   $("#bar #lineNumber").show();
@@ -147,8 +148,12 @@ window.showVehicleWay = function(w) {
 };
 
 $("#slowerbut").click(function() {
-  transitLayer.setMultiplicator(transitLayer.getMultiplicator() - 0.5);
-  $("#speedoview").html(transitLayer.getMultiplicator() + "x");
+  if (transitLayer.getMultiplicator() <= 1) transitLayer.setMultiplicator((transitLayer.getMultiplicator() - 0.1));
+  else if (transitLayer.getMultiplicator() <= 10) transitLayer.setMultiplicator(transitLayer.getMultiplicator() - 1);
+  else if (transitLayer.getMultiplicator() <= 20) transitLayer.setMultiplicator(transitLayer.getMultiplicator()- 5);
+  else transitLayer.setMultiplicator(transitLayer.getMultiplicator() - 10);
+  if (transitLayer.getMultiplicator() < 1) $("#speedoview").html(transitLayer.getMultiplicator().toFixed(1) + "x");
+  else $("#speedoview").html(transitLayer.getMultiplicator().toFixed(0) + "x");
 });
 
 $("#normalbut").click(function() {
@@ -157,8 +162,12 @@ $("#normalbut").click(function() {
 });
 
 $("#fasterbut").click(function() {
-  transitLayer.setMultiplicator(transitLayer.getMultiplicator() + 0.5);
-  $("#speedoview").html(transitLayer.getMultiplicator() + "x");
+  if (transitLayer.getMultiplicator() < 1) transitLayer.setMultiplicator((transitLayer.getMultiplicator().valueOf() - 0 + 0.1));
+  else if (transitLayer.getMultiplicator() < 10) transitLayer.setMultiplicator(transitLayer.getMultiplicator() + 1);
+  else if (transitLayer.getMultiplicator() < 20) transitLayer.setMultiplicator(transitLayer.getMultiplicator()+ 5);
+  else transitLayer.setMultiplicator(transitLayer.getMultiplicator() + 10);
+  if (transitLayer.getMultiplicator() < 1) $("#speedoview").html(transitLayer.getMultiplicator().toFixed(1) + "x");
+  else $("#speedoview").html(transitLayer.getMultiplicator().toFixed(0) + "x");
 });
 
 $("#currenttime").click(function() {
@@ -178,7 +187,7 @@ var osmLayer = new L.TileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', 
           attribution: '',
           maxZoom: 20
       });
-var oenvKarteLayer = new L.TileLayer('http://tile.memomaps.de/tilegen/{z}/{x}/{y}.png', {
+var oenvKarteLayer = new L.TileLayer('http://a.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png', {
     attribution: '',
     maxZoom: 20
 });
@@ -203,12 +212,12 @@ if (getParamByName("t")) {
 var transitLayer = new TransitLayer({"time" : starttime, "statMode" : statMode});
 var leafletTransitPlug = new T.Layer(transitLayer);
 
-// var trajClient = new TrajectoryClient("http://localhost:8989");
-var trajClient = new TrajectoryClient("http://panarea.informatik.uni-freiburg.de/routeplanner/ts_requestforwarder.php");
+var trajClient = new TrajectoryClient("http://localhost:8989");
+// var trajClient = new TrajectoryClient("http://panarea.informatik.uni-freiburg.de/routeplanner/ts_requestforwarder.php");
 transitLayer.setTrajectoryClient(trajClient);
 
 var map = L.map('map').setView(pos, zoom);
-map.addLayer(osmLayer).addLayer(leafletTransitPlug);
+map.addLayer(oenvKarteLayer).addLayer(leafletTransitPlug);
 
 var baseMaps = {
     "OpenStreetMap": osmLayer,

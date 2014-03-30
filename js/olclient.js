@@ -187,8 +187,12 @@ window.showVehicleWay = function(w) {
 };
 
 $("#slowerbut").click(function() {
-  transitLayer.setMultiplicator(transitLayer.getMultiplicator() - 0.5);
-  $("#speedoview").html(transitLayer.getMultiplicator() + "x");
+  if (transitLayer.getMultiplicator() <= 1) transitLayer.setMultiplicator((transitLayer.getMultiplicator() - 0.1));
+  else if (transitLayer.getMultiplicator() <= 10) transitLayer.setMultiplicator(transitLayer.getMultiplicator() - 1);
+  else if (transitLayer.getMultiplicator() <= 20) transitLayer.setMultiplicator(transitLayer.getMultiplicator()- 5);
+  else transitLayer.setMultiplicator(transitLayer.getMultiplicator() - 10);
+  if (transitLayer.getMultiplicator() < 1) $("#speedoview").html(transitLayer.getMultiplicator().toFixed(1) + "x");
+  else $("#speedoview").html(transitLayer.getMultiplicator().toFixed(0) + "x");
 });
 
 $("#normalbut").click(function() {
@@ -197,8 +201,12 @@ $("#normalbut").click(function() {
 });
 
 $("#fasterbut").click(function() {
-  transitLayer.setMultiplicator(transitLayer.getMultiplicator() + 0.5);
-  $("#speedoview").html(transitLayer.getMultiplicator() + "x");
+  if (transitLayer.getMultiplicator() < 1) transitLayer.setMultiplicator((transitLayer.getMultiplicator().valueOf() - 0 + 0.1));
+  else if (transitLayer.getMultiplicator() < 10) transitLayer.setMultiplicator(transitLayer.getMultiplicator() + 1);
+  else if (transitLayer.getMultiplicator() < 20) transitLayer.setMultiplicator(transitLayer.getMultiplicator()+ 5);
+  else transitLayer.setMultiplicator(transitLayer.getMultiplicator() + 10);
+  if (transitLayer.getMultiplicator() < 1) $("#speedoview").html(transitLayer.getMultiplicator().toFixed(1) + "x");
+  else $("#speedoview").html(transitLayer.getMultiplicator().toFixed(0) + "x");
 });
 
 $("#currenttime").click(function() {
